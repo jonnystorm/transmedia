@@ -19,7 +19,7 @@ done
 sdist=$( ls dist/transmedia-*.tar.gz )
 pip install $sdist --no-index -f file://$PWD/dist
 
-PYVERSION=$( cat ~/.pyenv/version )
+PYVERSION=$PYTHONVERSION
 PYMAJOR=$( echo $PYVERSION | awk -F'.' '{OFS="."; print $1,$2}' )
 ls ~/.pyenv/versions/$PYVERSION/lib/python${PYMAJOR}/site-packages/transmedia/
 
