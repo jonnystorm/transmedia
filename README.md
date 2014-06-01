@@ -5,7 +5,7 @@ ___
 
 **transmedia** is a collection of utilities for converting images to audio, and vice versa. I wrote it to make light of perceived absurdities in intellectual property law.
 
-![Example PNG output](http://github.com/jonnystorm/transmedia/examples/sine.png)
+![Example PNG output](https://raw.githubusercontent.com/jonnystorm/transmedia/master/examples/sine.png)
 
 At the moment, there are only two real scripts: ```pcm2png.py``` and ```png2pcm.py```. The first turns PCM audio files (raw, signed 16-bit, little-endian) into pretty pictures (sort of). The second turns those same pictures back into the original PCM audio. Of course, turning arbitrary PNG images into audio is likewise feasible, though the resulting audio may not convert back to PNG the way you anticipate (yet).
 
