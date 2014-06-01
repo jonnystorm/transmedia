@@ -59,14 +59,14 @@ def pcm2pixels(file, width, encoder=encoders.simple_encode):
 def write_png(pixel_rows, file):
     """Write rows of flat pixels to a png file.
 
-        :param pixel_rows: a list of pixel rows
-        :type pixel_rows: list[list[int]]
-        :param file: target png file
-        :type file: io.BufferedReader() or io.BytesIO()
+    :param pixel_rows: a list of pixel rows
+    :type pixel_rows: list[list[int]]
+    :param file: target png file
+    :type file: io.BufferedReader() or io.BytesIO()
 
-        :return: nothing
-        :rtype: None
-        """
+    :return: nothing
+    :rtype: None
+    """
     width = len(pixel_rows[0]) // 3
     height = len(pixel_rows)
     w = png.Writer(width, height)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Transform PCM to PNG')
     parser.add_argument('-i', '--input', help='input PCM file', required=True)
     parser.add_argument('-o', '--output', help='output PNG file', required=True)
-    parser.add_argument('-d', '--byte-depth', help='bytes per sample', default=2)
+    parser.add_argument('-d', '--byte-depth', help='bytes per sample (default: 2)', default=2)
     args = parser.parse_args()
 
     # Calculate png width
