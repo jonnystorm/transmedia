@@ -6,4 +6,4 @@
 # as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
 
 __author__ = 'jstorm'
-__version__ = '0.1.0'
+__version__ = '0.1.2'
