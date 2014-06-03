@@ -6,4 +6,9 @@
 # as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
 
 __author__ = 'jstorm'
-__version__ = '0.1.3'
+
+
+def test_import_of_all_modules():
+    from transmedia import encoders
+    from transmedia import bytes2png
+    from transmedia import png2bytes

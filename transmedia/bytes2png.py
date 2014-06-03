@@ -16,7 +16,7 @@ import png
 import transmedia.encoders as encoders
 
 
-def pcm2pixels(file, width, encoder=encoders.simple_encode):
+def words2pixels(file, width, encoder=encoders.simple_encode):
     """Given a target pixel width and encoding function, convert pcm samples to
     rows of pixels, two bytes at a time. This assumes each pcm sample is 16-bit.
 
@@ -56,39 +56,40 @@ def pcm2pixels(file, width, encoder=encoders.simple_encode):
     return rows
 
 
-def write_png(pixel_rows, file):
+def write_png(pixel_rows, file, byte_depth=3):
     """Write rows of flat pixels to a png file.
 
     :param pixel_rows: a list of pixel rows
     :type pixel_rows: list[list[int]]
     :param file: target png file
     :type file: io.BufferedReader() or io.BytesIO()
+    :param byte_depth: number of bytes per pixel
+    :type byte_depth: int
 
     :return: nothing
     :rtype: None
     """
-    width = len(pixel_rows[0]) // 3
+    width = len(pixel_rows[0]) // byte_depth
     height = len(pixel_rows)
-    w = png.Writer(width, height)
+    w = png.Writer(width, height, compression=9)
     w.write(file, pixel_rows)
 
 
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser(description='Transform PCM to PNG')
-    parser.add_argument('-i', '--input', help='input PCM file', required=True)
+    parser.add_argument('-i', '--input', help='input file', required=True)
     parser.add_argument('-o', '--output', help='output PNG file', required=True)
-    parser.add_argument('-d', '--byte-depth', help='bytes per sample (default: 2)', default=2)
     args = parser.parse_args()
 
-    # Calculate png width
-    ifsize = os.path.getsize(args.input)
-    samples = ifsize / args.byte_depth
-    png_width = int(math.ceil(math.sqrt(samples)))
+    # Calculate output png width
+    words = os.path.getsize(args.input) / 2
+    png_width = int(math.ceil(math.sqrt(words)))
 
-    # Encode pcm and write as png
+    # Encode data
     with open(args.input, 'rb') as pcm_file:
-        png_rows = pcm2pixels(pcm_file, png_width)
+        png_rows = words2pixels(pcm_file, png_width)
 
+    # Write pixels to png
     with open(args.output, 'wb') as png_file:
         write_png(png_rows, png_file)

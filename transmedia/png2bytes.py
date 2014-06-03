@@ -14,26 +14,25 @@ import png
 import transmedia.encoders as encoders
 
 
-def png2words(file, encoder=encoders.simple_decode):
+def pixels2words(pixel_rows, encoder=encoders.simple_decode):
     """Given a png file and encoding function, convert png rows to a bytearray.
     This assumes each pixel is 24-bit.
 
-    :param file: png file opened for binary read
-    :type file: io.BufferedReader() or io.BytesIO()
+    :param pixel_rows: rows of flat 24-bit pixels
+    :type pixel_rows: iterable
     :param encoder: encoding function
     :type encoder: function()
 
     :return: a bytearray
     :rtype: bytes()
     """
-    png_rows = png.Reader(file).read()[2]
+    byte_depth = 3
     words = bytearray()
-    for png_row in png_rows:
-        row = png_row.tolist()
+    for row in pixel_rows:
         while len(row):
             try:
-                r, g, b = row[0:3]
-                del row[0:3]
+                r, g, b = row[0:byte_depth]
+                del row[0:byte_depth]
                 words += encoder(r, g, b)
 
             except ValueError:
@@ -42,30 +41,38 @@ def png2words(file, encoder=encoders.simple_decode):
     return words
 
 
-def write_pcm(samples, file):
-    """Write samples to a pcm file.
+def get_png_pixels(file):
+    png_data = png.Reader(file).read()
+    pixel_imap = png_data[2]
 
-    :param samples: a bytearray
-    :type samples: bytes()
-    :param file: target pcm file
+    return (r.tolist() for r in pixel_imap)
+
+
+def write_data(data, file):
+    """Write data to a file.
+
+    :param data: a bytearray
+    :type data: bytes()
+    :param file: target file
     :type file: io.BufferedReader() or io.BytesIO()
 
     :return: nothing
     :rtype: None
     """
-    file.write(samples)
+    file.write(data)
 
 
 if __name__ == '__main__':
     # Parse arguments
-    parser = argparse.ArgumentParser(description='Transform PNG to PCM')
+    parser = argparse.ArgumentParser(description='Transform PNG into bytes')
     parser.add_argument('-i', '--input', help='input PNG file', required=True)
-    parser.add_argument('-o', '--output', help='output PCM file', required=True)
+    parser.add_argument('-o', '--output', help='output file', required=True)
     args = parser.parse_args()
 
-    # Encode pcm and write as png
+    # Encode pixels
     with open(args.input, 'rb') as png_file:
-        pcm_samples = png2words(png_file)
+        encoded_data = pixels2words(get_png_pixels(png_file))
 
-    with open(args.output, 'wb') as pcm_file:
-        write_pcm(pcm_samples, pcm_file)
+    # Write bytes to file
+    with open(args.output, 'wb') as data_file:
+        write_data(encoded_data, data_file)
