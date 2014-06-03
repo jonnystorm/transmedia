@@ -4,6 +4,14 @@ transmedia package
 Submodules
 ----------
 
+transmedia.bytes2png module
+---------------------------
+
+.. automodule:: transmedia.bytes2png
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 transmedia.encoders module
 --------------------------
 
@@ -12,18 +20,10 @@ transmedia.encoders module
     :undoc-members:
     :show-inheritance:
 
-transmedia.pcm2png module
--------------------------
+transmedia.png2bytes module
+---------------------------
 
-.. automodule:: transmedia.pcm2png
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-transmedia.png2pcm module
--------------------------
-
-.. automodule:: transmedia.png2pcm
+.. automodule:: transmedia.png2bytes
     :members:
     :undoc-members:
     :show-inheritance:

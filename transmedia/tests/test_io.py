@@ -9,11 +9,12 @@ __author__ = 'jstorm'
 
 import io
 
-import transmedia.pcm2png as pcm2png
-import transmedia.png2pcm as png2pcm
+import transmedia.bytes2png as pcm2png
+import transmedia.png2bytes as png2pcm
 
 
 def test_write_png_produces_file_of_expected_size():
+    expected_size = 77
     white = [255, 255, 255]
     black = [0, 0, 0]
     pixel_rows = [black + white + black,
@@ -22,12 +23,13 @@ def test_write_png_produces_file_of_expected_size():
 
     file = io.BytesIO()
     pcm2png.write_png(pixel_rows, file)
-    # Magic number 77: precomputed size of png file
-    assert len(file.getvalue()) == 77
+
+    assert len(file.getvalue()) == expected_size
 
 
-def test_write_pcm_produces_file_of_expected_size():
-    samples = bytearray.fromhex('ffffe3990012')
+def test_write_data_produces_expected_output():
+    data = bytearray.fromhex('ffffe3990012')
     file = io.BytesIO()
-    png2pcm.write_pcm(samples, file)
-    assert len(file.getvalue()) == len(samples)
+    png2pcm.write_data(data, file)
+
+    assert file.getvalue() == data
