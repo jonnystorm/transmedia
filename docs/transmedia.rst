@@ -4,14 +4,6 @@ transmedia package
 Submodules
 ----------
 
-transmedia.bytes2png module
----------------------------
-
-.. automodule:: transmedia.bytes2png
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 transmedia.conversion module
 ----------------------------
 
@@ -36,10 +28,10 @@ transmedia.io module
     :undoc-members:
     :show-inheritance:
 
-transmedia.png2bytes module
----------------------------
+transmedia.transform_png module
+-------------------------------
 
-.. automodule:: transmedia.png2bytes
+.. automodule:: transmedia.transform_png
     :members:
     :undoc-members:
     :show-inheritance:
