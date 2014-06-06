@@ -9,7 +9,7 @@ __author__ = 'jstorm'
 
 import png
 
-from transmedia.conversion import PixelArray
+from transmedia.util import PixelArray
 
 
 def read_data_from_file(file):

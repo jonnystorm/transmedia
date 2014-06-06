@@ -8,50 +8,10 @@
 __author__ = 'jstorm'
 
 from transmedia import encoders
+from transmedia.io import (read_data_from_file, write_pixels_to_png,
+                           read_pixels_from_png, write_data_to_file)
 
-
-class PixelArray():
-    """Value object with some convenient behavior and properties for rows of
-    flat pixels.
-    """
-    def __init__(self, pixel_rows, byte_depth=3):
-        """Initialize new PixelArray object.
-
-        :param pixel_rows: an array of rows of flat pixels
-        :type pixel_rows: iterable containing one or more list[int]
-        """
-        self._byte_depth = byte_depth
-        self._pixel_rows = pixel_rows
-        self._height = len(pixel_rows)
-        self._width = len(max(pixel_rows, key=len)) // self._byte_depth
-
-    def __iter__(self):
-        for r in self._pixel_rows:
-            # Fill in any missing pixels with black (0, 0, 0)
-            pad = [0 for i in range((self._width * self._byte_depth) - len(r))]
-            yield r + pad
-
-    @property
-    def byte_depth(self):
-        return self._byte_depth
-
-    @property
-    def height(self):
-        return self._height
-
-    @property
-    def width(self):
-        return self._width
-
-    @property
-    def rows(self):
-        # Return rows padded with zeros
-        return [r for r in self]
-
-    @property
-    def rows_raw(self):
-        # Return unpadded rows
-        return self._pixel_rows
+from transmedia.util import PixelArray
 
 
 def convert_bytes_to_pixels(data, width, encoder=encoders.simple_encode):
@@ -122,3 +82,62 @@ def convert_pixels_to_bytes(pixel_array, encoder=encoders.simple_decode):
                 break
 
     return words
+
+
+class ConversionBase():
+    """Base class for all conversion objects.
+    """
+    def __init__(self, input_file, output_file):
+        """Initialize object.
+
+        :param input_file: path of the file to convert
+        :type input_file: str
+        :param output_file: path of the file to be written
+        :type output_file: str
+        """
+        self._input_file = input_file
+        self._output_file = output_file
+
+    def execute(self):
+        raise NotImplementedError("execute() method not implemented!")
+
+
+class ConvertBytesInFileToPngFile(ConversionBase):
+    def __init__(self, input_file, output_file, width):
+        """Initialize object.
+
+        :param input_file: path of the file to convert
+        :type input_file: str
+        :param output_file: path of the file to be written
+        :type output_file: str
+        :param width: width, in pixels, of the resulting PNG image
+        :type width: int
+        """
+        super().__init__(input_file, output_file)
+        self._width = width
+
+    def execute(self):
+        with open(self._input_file, 'rb') as data_file:
+            with open(self._output_file, 'wb') as png_file:
+                data = read_data_from_file(data_file)
+                write_pixels_to_png(convert_bytes_to_pixels(data, self._width),
+                                    png_file)
+
+
+class ConvertPixelsInPngFileToBytesFile(ConversionBase):
+    def __init__(self, input_file, output_file):
+        """Initialize object.
+
+        :param input_file: path of the file to convert
+        :type input_file: str
+        :param output_file: path of the file to be written
+        :type output_file: str
+        """
+        super().__init__(input_file, output_file)
+
+    def execute(self):
+        with open(self._input_file, 'rb') as png_file:
+            with open(self._output_file, 'wb') as data_file:
+                pixels = read_pixels_from_png(png_file)
+                write_data_to_file(convert_pixels_to_bytes(pixels), data_file)
+
