@@ -16,8 +16,8 @@ import transmedia.encoders as encoders
 ### bytes2pixels tests ###
 
 def check_bytes2pixels_returns_correct_width(correct_width):
-    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
-    pixels = convert_bytes_to_pixels(test_data, correct_width,
+    data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    pixels = convert_bytes_to_pixels(data, correct_width,
                                      encoders.simple_encode)
 
     width_top = len(pixels.rows[0]) / pixels.byte_depth
@@ -35,8 +35,8 @@ def test_bytes2pixels_returns_correct_width():
 
 def test_bytes2pixels_returns_square():
     correct_dimension = 3  # 3x3 square
-    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
-    pixels = convert_bytes_to_pixels(test_data, correct_dimension,
+    data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    pixels = convert_bytes_to_pixels(data, correct_dimension,
                                      encoders.simple_encode)
 
     width_top = len(pixels.rows[0]) / pixels.byte_depth
@@ -50,9 +50,8 @@ def test_bytes2pixels_returns_square():
 def test_bytes2pixels_raises_value_error_on_negative_width():
     try:
         negative_width = -1
-        test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
-        convert_bytes_to_pixels(test_data, negative_width,
-                                encoders.simple_encode)
+        data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+        convert_bytes_to_pixels(data, negative_width, encoders.simple_encode)
 
         assert False, "bytes2pixels erroneously succeeds on negative width"
 
@@ -63,9 +62,8 @@ def test_bytes2pixels_raises_value_error_on_negative_width():
 def test_bytes2pixels_raises_value_error_on_zero_width():
     try:
         zero_width = 0
-        test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
-        convert_bytes_to_pixels(test_data, zero_width,
-                                encoders.simple_encode)
+        data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+        convert_bytes_to_pixels(data, zero_width, encoders.simple_encode)
 
         assert False, "bytes2pixels erroneously succeeds on zero width"
 
@@ -74,10 +72,10 @@ def test_bytes2pixels_raises_value_error_on_zero_width():
 
 
 def test_bytes2pixels_returns_max_width_on_excessive_width_input():
-    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
-    max_width = len(test_data) // 2
+    data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    max_width = len(data) // 2
     excessive_width = max_width + 1
-    pixels = convert_bytes_to_pixels(test_data, excessive_width,
+    pixels = convert_bytes_to_pixels(data, excessive_width,
                                      encoders.simple_encode)
 
     assert pixels.width != excessive_width, \
@@ -87,11 +85,10 @@ def test_bytes2pixels_returns_max_width_on_excessive_width_input():
 ### pixels2bytes tests ###
 
 def test_pixels2bytes_returns_correct_length():
-    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
-    correct_length = len(test_data)
-    test_png_data = convert_bytes_to_pixels(test_data, 3,
-                                            encoders.simple_encode)
-
+    data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    correct_length = len(data)
+    width = 3
+    test_png_data = convert_bytes_to_pixels(data, width, encoders.simple_encode)
     words = convert_pixels_to_bytes(test_png_data, encoders.simple_decode)
 
     assert len(words) == correct_length, \
