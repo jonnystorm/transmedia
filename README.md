@@ -9,32 +9,32 @@ ___
 
 ![Example PNG output](https://raw.githubusercontent.com/jonnystorm/transmedia/master/examples/sine.png)
 
-At the moment, there are only two real scripts: ```pcm2png.py``` and ```png2pcm.py```. The first turns PCM audio files (raw, signed 16-bit, little-endian) into pretty pictures (sort of). The second turns those same pictures back into the original PCM audio. Of course, turning arbitrary PNG images into audio is likewise feasible, though the resulting audio may not convert back to PNG the way you anticipate (yet).
+At the moment, there are only two real scripts: ```bytes2png.py``` and ```png2bytes.py```. The first turns any file into a pretty picture (sort of). The second turns those same pictures back into the original file. Of course, turning arbitrary PNG images into noise is likewise feasible, though the resulting file may not convert back to PNG the way you anticipate (yet).
 
-    usage: pcm2png.py [-h] -i INPUT -o OUTPUT [-d BYTE_DEPTH]
+    usage: bytes2png.py [-h] -i INPUT -o OUTPUT [-d BYTE_DEPTH]
 
-    Transform PCM to PNG
+    Transform bytes into PNG
 
     optional arguments:
       -h, --help            show this help message and exit
       -i INPUT, --input INPUT
-                            input PCM file
+                            input data file
       -o OUTPUT, --output OUTPUT
                             output PNG file
       -d BYTE_DEPTH, --byte-depth BYTE_DEPTH
-                            bytes per sample (default: 2)
+                            bytes per pixel (default: 2)
 
     
-    usage: png2pcm.py [-h] -i INPUT -o OUTPUT
+    usage: png2bytes.py [-h] -i INPUT -o OUTPUT
 
-    Transform PNG to PCM
+    Transform PNG into bytes
 
     optional arguments:
       -h, --help            show this help message and exit
       -i INPUT, --input INPUT
                             input PNG file
       -o OUTPUT, --output OUTPUT
-                            output PCM file
+                            output data file
 
 ### Installation
 
