@@ -9,57 +9,28 @@ __author__ = 'jstorm'
 
 import argparse
 
-import png
 
-import transmedia.encoders as encoders
-
-
-def pixels2words(pixel_rows, encoder=encoders.simple_decode):
-    """Given a png file and encoding function, convert png rows to a bytearray.
-    This assumes each pixel is 24-bit.
-
-    :param pixel_rows: rows of flat 24-bit pixels
-    :type pixel_rows: iterable
-    :param encoder: encoding function
-    :type encoder: function()
-
-    :return: a bytearray
-    :rtype: bytes()
-    """
-    byte_depth = 3
-    words = bytearray()
-    for row in pixel_rows:
-        while len(row):
-            try:
-                r, g, b = row[0:byte_depth]
-                del row[0:byte_depth]
-                words += encoder(r, g, b)
-
-            except ValueError:
-                break
-
-    return words
+from transmedia.conversion import convert_pixels_to_bytes
+from transmedia.io import read_pixels_from_png, write_data_to_file
 
 
-def get_png_pixels(file):
-    png_data = png.Reader(file).read()
-    pixel_imap = png_data[2]
+class ConvertPixelsInPngFileToBytes():
+    def __init__(self, input_file, output_file):
+        """Initialize object.
 
-    return (r.tolist() for r in pixel_imap)
+        :param input_file: path to the file to convert
+        :type input_file: str
+        :param output_file: path to the PNG file to be written
+        :type output_file: str
+        """
+        self._input_file = input_file
+        self._output_file = output_file
 
-
-def write_data(data, file):
-    """Write data to a file.
-
-    :param data: a bytearray
-    :type data: bytes()
-    :param file: target file
-    :type file: io.BufferedReader() or io.BytesIO()
-
-    :return: nothing
-    :rtype: None
-    """
-    file.write(data)
+    def execute(self):
+        with open(self._input_file, 'rb') as png_file:
+            with open(self._output_file, 'wb') as data_file:
+                pixels = read_pixels_from_png(png_file)
+                write_data_to_file(convert_pixels_to_bytes(pixels), data_file)
 
 
 if __name__ == '__main__':
@@ -69,10 +40,4 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', help='output file', required=True)
     args = parser.parse_args()
 
-    # Encode pixels
-    with open(args.input, 'rb') as png_file:
-        encoded_data = pixels2words(get_png_pixels(png_file))
-
-    # Write bytes to file
-    with open(args.output, 'wb') as data_file:
-        write_data(encoded_data, data_file)
+    ConvertPixelsInPngFileToBytes(args.input, args.output).execute()

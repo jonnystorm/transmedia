@@ -6,4 +6,9 @@
 # as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
 
 __author__ = 'jstorm'
-__version__ = '0.1.4'
+
+import math
+
+
+def side_len_of_smallest_square_containing_n_units(n):
+    return int(math.ceil(math.sqrt(n)))
