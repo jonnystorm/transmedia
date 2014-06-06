@@ -9,11 +9,11 @@ ___
 
 ![Example PNG output](https://raw.githubusercontent.com/jonnystorm/transmedia/master/examples/sine.png)
 
-At the moment, there are only two real scripts: ```bytes2png.py``` and ```png2bytes.py```. The first turns any file into a pretty picture (sort of). The second turns those same pictures back into the original file. Of course, turning arbitrary PNG images into noise is likewise feasible, though the resulting file may not convert back to PNG the way you anticipate (yet).
+At the moment, there is only one script: ```transform_png.py```. This turns files into pretty pictures (sort of) or vice versa. Of course, turning arbitrary PNG images into noise is likewise feasible, though the resulting file may not convert back to PNG the way you anticipate (yet).
 
-    usage: bytes2png.py [-h] -i INPUT -o OUTPUT [-d BYTE_DEPTH]
+    usage: transform_png.py [-h] -i INPUT -o OUTPUT
 
-    Transform bytes into PNG
+    Transform bytes into PNG or vice versa
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -21,20 +21,7 @@ At the moment, there are only two real scripts: ```bytes2png.py``` and ```png2by
                             input data file
       -o OUTPUT, --output OUTPUT
                             output PNG file
-      -d BYTE_DEPTH, --byte-depth BYTE_DEPTH
-                            bytes per pixel (default: 2)
 
-    
-    usage: png2bytes.py [-h] -i INPUT -o OUTPUT
-
-    Transform PNG into bytes
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -i INPUT, --input INPUT
-                            input PNG file
-      -o OUTPUT, --output OUTPUT
-                            output data file
 
 ### Installation
 

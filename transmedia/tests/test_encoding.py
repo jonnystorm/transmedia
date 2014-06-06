@@ -10,11 +10,6 @@ __author__ = 'jstorm'
 import transmedia.encoders as encoders
 
 
-test_values = ((bytearray.fromhex('0000'), (int(0x00), int(0x00), int(0x00))),
-               (bytearray.fromhex('1111'), (int(0x11), int(0x11), int(0x00))),
-               (bytearray.fromhex('ffff'), (int(0x00), int(0x01), int(0xff))))
-
-
 ### simple_encode tests ###
 
 def check_simple_encode_maps_word_to_correct_color(word, correct_color):
@@ -25,7 +20,11 @@ def check_simple_encode_maps_word_to_correct_color(word, correct_color):
 
 
 def test_simple_encode_maps_words_to_correct_colors():
-    for word, correct_color in test_values:
+    values = ((bytearray.fromhex('0000'), (int(0x00), int(0x00), int(0x00))),
+              (bytearray.fromhex('1111'), (int(0x11), int(0x11), int(0x00))),
+              (bytearray.fromhex('ffff'), (int(0x00), int(0x01), int(0xff))))
+
+    for word, correct_color in values:
         yield(check_simple_encode_maps_word_to_correct_color, word,
               correct_color)
 
@@ -59,7 +58,11 @@ def check_simple_decode_maps_color_to_correct_word(color, correct_word):
 
 
 def test_simple_decode_maps_colors_to_correct_words():
-    for correct_word, color in test_values:
+    values = ((bytearray.fromhex('0000'), (int(0x00), int(0x00), int(0x00))),
+              (bytearray.fromhex('1111'), (int(0x11), int(0x11), int(0x00))),
+              (bytearray.fromhex('ffff'), (int(0x00), int(0x01), int(0xff))))
+
+    for correct_word, color in values:
         yield(check_simple_decode_maps_color_to_correct_word, color,
               correct_word)
 

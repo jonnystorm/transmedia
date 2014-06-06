@@ -8,7 +8,15 @@
 __author__ = 'jstorm'
 
 import math
+import os
 
 
-def side_len_of_smallest_square_containing_n_units(n):
+def integer_side_len_of_smallest_square_containing_n_units(n):
     return int(math.ceil(math.sqrt(n)))
+
+
+def calculate_output_png_width_from_file(filename):
+    bytes_per_word = 2
+    word_count = os.path.getsize(filename) / bytes_per_word
+
+    return integer_side_len_of_smallest_square_containing_n_units(word_count)
