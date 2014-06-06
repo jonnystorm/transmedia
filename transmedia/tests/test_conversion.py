@@ -7,99 +7,92 @@
 
 __author__ = 'jstorm'
 
-import io
+from transmedia.conversion import (convert_bytes_to_pixels,
+                                   convert_pixels_to_bytes)
 
-import transmedia.bytes2png as pcm2png
-import transmedia.png2bytes as png2pcm
 import transmedia.encoders as encoders
 
 
-test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+### bytes2pixels tests ###
 
+def check_bytes2pixels_returns_correct_width(correct_width):
+    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    pixels = convert_bytes_to_pixels(test_data, correct_width,
+                                     encoders.simple_encode)
 
-### words2pixels tests ###
-
-def check_words2pixels_returns_correct_width(correct_width):
-    test_data_file = io.BytesIO(test_data)
-    rows = pcm2png.words2pixels(test_data_file, correct_width,
-                                encoders.simple_encode)
-
-    byte_depth = 3
-    width_top = len(rows[0]) / byte_depth
-    width_bottom = len(rows[-1]) / byte_depth
+    width_top = len(pixels.rows[0]) / pixels.byte_depth
+    width_bottom = len(pixels.rows[-1]) / pixels.byte_depth
 
     assert width_top == width_bottom == correct_width, \
         "({} == {} == {}) is false".format(width_top, width_bottom,
                                            correct_width)
 
 
-def test_words2pixels_returns_correct_width():
+def test_bytes2pixels_returns_correct_width():
     for width in (1, 3, 9):  # a single column, a square, a single row
-        yield check_words2pixels_returns_correct_width, width
+        yield check_bytes2pixels_returns_correct_width, width
 
 
-def test_words2pixels_returns_square():
+def test_bytes2pixels_returns_square():
     correct_dimension = 3  # 3x3 square
-    test_data_file = io.BytesIO(test_data)
-    rows = pcm2png.words2pixels(test_data_file, correct_dimension,
-                                encoders.simple_encode)
+    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    pixels = convert_bytes_to_pixels(test_data, correct_dimension,
+                                     encoders.simple_encode)
 
-    byte_depth = 3
-    width_top = len(rows[0]) / byte_depth
-    height = len(rows)
+    width_top = len(pixels.rows[0]) / pixels.byte_depth
+    height = len(pixels.rows)
 
     assert width_top == height == correct_dimension, \
         "({} == {} == {} == {}) is false".format(width_top, height,
                                                  correct_dimension)
 
 
-def test_words2pixels_raises_runtime_error_on_negative_width():
+def test_bytes2pixels_raises_value_error_on_negative_width():
     try:
         negative_width = -1
-        file = io.BytesIO(test_data)
-        pcm2png.words2pixels(file, negative_width, encoders.simple_encode)
-
-        assert False, "words2pixels erroneously succeeds on negative width"
-
-    except RuntimeError:
-        pass
-
-
-def test_words2pixels_raises_runtime_error_on_zero_width():
-    try:
-        zero_width = 0
-        file = io.BytesIO(test_data)
-        pcm2png.words2pixels(file, zero_width, encoders.simple_encode)
-
-        assert False, "words2pixels erroneously succeeds on zero width"
-
-    except RuntimeError:
-        pass
-
-
-def test_words2pixels_returns_max_width_on_excessive_width_input():
-    excessive_width = len(test_data) // 2 + 1  # max width + 1
-    test_data_file = io.BytesIO(test_data)
-    rows = pcm2png.words2pixels(test_data_file, excessive_width,
+        test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+        convert_bytes_to_pixels(test_data, negative_width,
                                 encoders.simple_encode)
 
-    byte_depth = 3
-    actual_width = len(rows[0]) / byte_depth
+        assert False, "bytes2pixels erroneously succeeds on negative width"
 
-    assert actual_width != excessive_width, \
-        "{} == {} == {}".format(actual_width, excessive_width)
+    except ValueError:
+        pass
 
 
-### pixels2words tests ###
+def test_bytes2pixels_raises_value_error_on_zero_width():
+    try:
+        zero_width = 0
+        test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+        convert_bytes_to_pixels(test_data, zero_width,
+                                encoders.simple_encode)
 
-def test_pixels2words_returns_correct_length():
+        assert False, "bytes2pixels erroneously succeeds on zero width"
+
+    except ValueError:
+        pass
+
+
+def test_bytes2pixels_returns_max_width_on_excessive_width_input():
+    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
+    max_width = len(test_data) // 2
+    excessive_width = max_width + 1
+    pixels = convert_bytes_to_pixels(test_data, excessive_width,
+                                     encoders.simple_encode)
+
+    assert pixels.width != excessive_width, \
+        "{} == {} == {}".format(pixels.width, excessive_width)
+
+
+### pixels2bytes tests ###
+
+def test_pixels2bytes_returns_correct_length():
+    test_data = bytearray.fromhex('ffff6d06cb0cc436103c2741895c1f5f4861')
     correct_length = len(test_data)
-    byte_depth = 3
-    test_png_data = pcm2png.words2pixels(io.BytesIO(test_data), byte_depth,
-                                         encoders.simple_encode)
+    test_png_data = convert_bytes_to_pixels(test_data, 3,
+                                            encoders.simple_encode)
 
-    words = png2pcm.pixels2words(test_png_data, encoders.simple_decode)
-    actual_length = len(words)
+    words = convert_pixels_to_bytes(test_png_data, encoders.simple_decode)
 
-    assert actual_length == correct_length, \
-        "{} != {}".format(actual_length, correct_length)
+    assert len(words) == correct_length, \
+        "{} != {}".format(len(words), correct_length)
