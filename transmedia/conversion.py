@@ -74,8 +74,8 @@ def convert_pixels_to_bytes(pixel_array, encoder=encoders.simple_decode):
         byte_idx = 0
         while byte_idx < len(row) - 1:
             try:
-                components = row[byte_idx:byte_idx + pixel_array.byte_depth]
-                words += encoder(*components)
+                pixel = row[byte_idx:byte_idx + pixel_array.byte_depth]
+                words += encoder(*pixel)
                 byte_idx += pixel_array.byte_depth
 
             except ValueError:
