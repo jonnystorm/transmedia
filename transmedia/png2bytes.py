@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser(description='Transform PNG into bytes')
     parser.add_argument('-i', '--input', help='input PNG file', required=True)
-    parser.add_argument('-o', '--output', help='output file', required=True)
+    parser.add_argument('-o', '--output', help='output data file', required=True)
     args = parser.parse_args()
 
     ConvertPixelsInPngFileToBytes(args.input, args.output).execute()

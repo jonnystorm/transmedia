@@ -41,8 +41,8 @@ class ConvertFileInBytesToPngFile():
 
 if __name__ == '__main__':
     # Parse arguments
-    parser = argparse.ArgumentParser(description='Transform PCM to PNG')
-    parser.add_argument('-i', '--input', help='input file', required=True)
+    parser = argparse.ArgumentParser(description='Transform bytes into PNG')
+    parser.add_argument('-i', '--input', help='input data file', required=True)
     parser.add_argument('-o', '--output', help='output PNG file', required=True)
     args = parser.parse_args()
 
