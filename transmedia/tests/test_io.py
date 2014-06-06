@@ -9,7 +9,7 @@ __author__ = 'jstorm'
 
 import io
 
-from transmedia.conversion import PixelArray
+from transmedia.util import PixelArray
 from transmedia.io import (write_data_to_file, write_pixels_to_png)
 
 
