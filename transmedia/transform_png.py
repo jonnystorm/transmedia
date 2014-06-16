@@ -9,10 +9,9 @@ __author__ = 'jstorm'
 
 import argparse
 
+from transmedia.util import calculate_output_png_width_from_file
 from transmedia.conversion import (ConvertBytesInFileToPngFile,
                                    ConvertPixelsInPngFileToBytesFile)
-
-from transmedia.util import calculate_output_png_width_from_file
 
 
 if __name__ == '__main__':

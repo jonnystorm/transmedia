@@ -7,16 +7,17 @@
 
 __author__ = 'jstorm'
 
-import transmedia.encoders as encoders
+import transmedia.codecs as codecs
+from transmedia.util import Pixel
 
 
 ### simple_encode tests ###
 
 def check_simple_encode_maps_word_to_correct_color(word, correct_color):
-    test_color = encoders.simple_encode(word)
+    test_color = codecs.SimpleCodec.encode(word).as_integer_triple()
 
     assert test_color == correct_color, \
-        "{} =! {}".format(test_color, correct_color)
+        "{} != {}".format(test_color, correct_color)
 
 
 def test_simple_encode_maps_words_to_correct_colors():
@@ -31,7 +32,7 @@ def test_simple_encode_maps_words_to_correct_colors():
 
 def test_simple_encode_raises_value_error_on_single_byte_input():
     try:
-        encoders.simple_encode(bytearray.fromhex('00'))
+        codecs.SimpleCodec.encode(bytearray.fromhex('00'))
 
         assert False, "simple_encoder erroneously succeeds on single-byte input"
 
@@ -41,7 +42,7 @@ def test_simple_encode_raises_value_error_on_single_byte_input():
 
 def test_simple_encode_raises_type_error_on_int_input():
     try:
-        encoders.simple_encode(1)
+        codecs.SimpleCodec.encode(1)
 
         assert False, "simple_encoder erroneously succeeds on integer input"
 
@@ -52,9 +53,9 @@ def test_simple_encode_raises_type_error_on_int_input():
 ### simple_decode tests ###
 
 def check_simple_decode_maps_color_to_correct_word(color, correct_word):
-    test_word = encoders.simple_decode(*color)
+    test_word = codecs.SimpleCodec.decode(Pixel(*color))
 
-    assert test_word == correct_word, "{} =! {}".format(test_word, correct_word)
+    assert test_word == correct_word, "{} != {}".format(test_word, correct_word)
 
 
 def test_simple_decode_maps_colors_to_correct_words():
@@ -65,23 +66,3 @@ def test_simple_decode_maps_colors_to_correct_words():
     for correct_word, color in values:
         yield(check_simple_decode_maps_color_to_correct_word, color,
               correct_word)
-
-
-def test_simple_decode_raises_type_error_on_single_byte_input():
-    try:
-        encoders.simple_decode(0)
-
-        assert False, "simple_decoder erroneously succeeds on single-byte input"
-
-    except TypeError:
-        pass
-
-
-def test_simple_decode_raises_type_error_on_str_input():
-    try:
-        encoders.simple_decode('0', '0', '0')
-
-        assert False, "simple_decoder erroneously succeeds on string input"
-
-    except TypeError:
-        pass
