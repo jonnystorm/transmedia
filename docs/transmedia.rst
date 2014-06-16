@@ -4,18 +4,18 @@ transmedia package
 Submodules
 ----------
 
-transmedia.conversion module
-----------------------------
+transmedia.codecs module
+------------------------
 
-.. automodule:: transmedia.conversion
+.. automodule:: transmedia.codecs
     :members:
     :undoc-members:
     :show-inheritance:
 
-transmedia.encoders module
---------------------------
+transmedia.conversion module
+----------------------------
 
-.. automodule:: transmedia.encoders
+.. automodule:: transmedia.conversion
     :members:
     :undoc-members:
     :show-inheritance:

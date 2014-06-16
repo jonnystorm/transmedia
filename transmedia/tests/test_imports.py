@@ -10,7 +10,7 @@ __author__ = 'jstorm'
 
 def test_import_of_all_modules():
     from transmedia import conversion
-    from transmedia import encoders
+    from transmedia import codecs
     from transmedia import io
     from transmedia import util
     from transmedia import transform_png

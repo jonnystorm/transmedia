@@ -7,14 +7,14 @@
 
 __author__ = 'jstorm'
 
-from transmedia import encoders
+from transmedia import codecs
 from transmedia.io import (read_data_from_file, write_pixels_to_png,
                            read_pixels_from_png, write_data_to_file)
 
-from transmedia.util import PixelArray
+from transmedia.util import Pixel, PixelArray
 
 
-def convert_bytes_to_pixels(data, width, encoder=encoders.simple_encode):
+def convert_bytes_to_pixels(data, width, encoder=codecs.SimpleCodec.encode):
     """Given a target pixel width and encoding function, convert bytes to
     rows of pixels, two bytes at a time.
 
@@ -23,7 +23,7 @@ def convert_bytes_to_pixels(data, width, encoder=encoders.simple_encode):
     :param width: number of pixels per row
     :type width: int
     :param encoder: encoding function
-    :type encoder: function()
+    :type encoder: function
 
     :return: a pixel array object
     :rtype: PixelArray()
@@ -46,7 +46,7 @@ def convert_bytes_to_pixels(data, width, encoder=encoders.simple_encode):
 
                     raise ValueError()
 
-                cur_row += encoder(word)
+                cur_row += encoder(word).as_integer_triple()
                 data_idx += bytes_per_pixel
 
             rows += [cur_row]
@@ -57,7 +57,7 @@ def convert_bytes_to_pixels(data, width, encoder=encoders.simple_encode):
     return PixelArray(rows, byte_depth=byte_depth)
 
 
-def convert_pixels_to_bytes(pixel_array, encoder=encoders.simple_decode):
+def convert_pixels_to_bytes(pixel_array, encoder=codecs.SimpleCodec.decode):
     """Given a pixel array and an encoding function, convert all pixels
     to a byte array.
 
@@ -74,8 +74,8 @@ def convert_pixels_to_bytes(pixel_array, encoder=encoders.simple_decode):
         byte_idx = 0
         while byte_idx < len(row) - 1:
             try:
-                pixel = row[byte_idx:byte_idx + pixel_array.byte_depth]
-                words += encoder(*pixel)
+                integer_triple = row[byte_idx:byte_idx + pixel_array.byte_depth]
+                words += encoder(Pixel(*integer_triple))
                 byte_idx += pixel_array.byte_depth
 
             except ValueError:
@@ -140,4 +140,3 @@ class ConvertPixelsInPngFileToBytesFile(ConversionBase):
             with open(self._output_file, 'wb') as data_file:
                 pixels = read_pixels_from_png(png_file)
                 write_data_to_file(convert_pixels_to_bytes(pixels), data_file)
-

@@ -52,7 +52,7 @@ clean:
 
 rtd:
 	make clean
-	rm ./transmedia*.rst
+	rm -f ./transmedia*.rst
 	sphinx-apidoc -o $(SOURCEDIR) .. `find .. -iname 'setup.py' -o -iname 'tests' -o -iname 'templates.py'`
 	rm ./modules.rst
 

@@ -41,6 +41,7 @@ class PixelArray():
         for r in self._pixel_rows:
             # Fill in any missing pixels with black (0, 0, 0)
             pad = [0 for i in range((self._width * self._byte_depth) - len(r))]
+
             yield r + pad
 
     @property
@@ -64,3 +65,42 @@ class PixelArray():
     def rows_raw(self):
         # Return unpadded rows
         return self._pixel_rows
+
+
+class Pixel():
+    """
+    """
+    def __init__(self, red, green, blue):
+        """Initialize new Pixel object.
+
+        :param red: integer between 0 and 255
+        :type red: int
+        :param green: integer between 0 and 255
+        :type green: int
+        :param blue: integer between 0 and 255
+        :type blue: int
+        """
+        valid_range = range(0, 255 + 1)
+        if any((color not in valid_range for color in [red, green, blue])):
+            raise ValueError(("Pixel components must be integers between 0 and "
+                              "255, inclusive; got ({},{},{}) instead".
+                              format(red, green, blue)))
+
+        self._red = red
+        self._green = green
+        self._blue = blue
+
+    @property
+    def red(self):
+        return self._red
+
+    @property
+    def green(self):
+        return self._green
+
+    @property
+    def blue(self):
+        return self._blue
+
+    def as_integer_triple(self):
+        return self._red, self._green, self._blue
